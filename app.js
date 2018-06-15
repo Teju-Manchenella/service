@@ -62,7 +62,8 @@ const definitionService = require('./business/definitionService')(
 // Circular dependency. Reach in and set the curationService's definitionService. Sigh.
 curationService.definitionService = definitionService
 
-const badges = require('./routes/badges').getRouter(definitionService)
+const badgeService = require(`./providers/badge/badge.js`)()
+const badges = require('./routes/badges')(badgeService, definitionService)
 const definitions = require('./routes/definitions')(harvestStore, curationService, definitionService)
 
 const appLogger = console // @todo add real logger
