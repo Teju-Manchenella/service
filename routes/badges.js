@@ -16,9 +16,8 @@ async function getComponentBadgeRouterShell(definitionService, request) {
 }
 
 async function getComponentBadgeLink(definitionService, request) {
-  const coordinates = utils.toEntityCoordinatesFromRequest(request)
-  const definition = await definitionService.get(coordinates, request.params.pr)
-  const url = badgeService.getBadgeUrl(definition)
+  const score = request.params.score
+  const url = badgeService.getBadgeUrl(score)
   const badgeCacheKey = await getCacheKey('clearlyDefined.badge', url)
   const badge = await getBadge(badgeCacheKey, request, url)
   return badge
@@ -57,10 +56,11 @@ async function getCacheKey(prefix, token) {
 }
 
 router.get(
-  '/:type/:provider/:namespace/:name/:revision',
+  '/:score',
   asyncMiddleware(async (request, response) => {
+    const score = request.params.score
     return getComponentBadgeRouterShell(definitionService, request).then(result => {
-      response.status(200).send({ svgTag: result })
+      response.status(200).send({ [score]: result })
     })
   })
 )

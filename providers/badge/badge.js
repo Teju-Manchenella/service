@@ -12,16 +12,8 @@ const scoreToUrl = {
 class BadgeService {
   constructor() {}
 
-  getBadgeUrl(definition) {
-    return scoreToUrl[this.calculate(definition)]
-  }
-
-  calculate(definition) {
-    const hasLicense = get(definition, 'licensed.declared')
-    const hasAttributionParties = get(definition, 'licensed.attribution.parties[0]')
-    if (hasLicense && hasAttributionParties) return 2
-    if (hasLicense || hasAttributionParties) return 1
-    return 0
+  getBadgeUrl(score) {
+    return scoreToUrl[score]
   }
 }
 
