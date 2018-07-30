@@ -36,6 +36,19 @@ router.get(
   })
 )
 
+router.get(
+  '/pr',
+  asyncMiddleware(async (request, response) => {
+    const repo = request.app.locals.config.curation.store.github.repo
+    const owner = request.app.locals.config.curation.store.github.owner
+    const serviceGithub = request.app.locals.service.github.client
+    const answer = await serviceGithub.pullRequests.getAll({ owner, repo })
+    const res = answer.data.map(pull => pull.number)
+    if (res && res.length > 0) return response.status(200).send(res)
+    return response.sendStatus(404)
+  })
+)
+
 // Get an existing patch for a specific revision of a component
 router.get(
   '/:type/:provider/:namespace/:name/:revision',
